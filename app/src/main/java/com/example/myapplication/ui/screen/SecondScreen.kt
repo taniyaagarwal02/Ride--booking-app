@@ -1,13 +1,12 @@
 package com.example.myapplication.ui.screen
 
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,132 +14,152 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.R
+import com.example.myapplication.ui.theme.Purple40
+import com.example.myapplication.ui.viewmodel.SecondScreenViewModel
 
 @Composable
-fun SecondScreen(navController: NavController) {
-
-    var currentLocation by remember { mutableStateOf("") }
-    var destination by remember { mutableStateOf("") }
+fun SecondScreen(
+    navController: NavController,
+    viewModel: SecondScreenViewModel = viewModel()
+) {
+    val currentLocation by viewModel.currentLocation.collectAsState()
+    val destination by viewModel.destination.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        /* 🔹 TOP BLUE SECTION (INCREASED HEIGHT) */
+        /* 🔹 TOP IMAGE SECTION (SAME AS THIRD SCREEN) */
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(420.dp) // ⬆️ increased height
+                .height(200.dp)
                 .clip(
                     RoundedCornerShape(
                         bottomStart = 40.dp,
                         bottomEnd = 40.dp
                     )
                 )
-                .background(Color(0xFF87CEEB))
-                .padding(16.dp)
         ) {
-            Column {
+            Image(
+                painter = painterResource(id = R.drawable.loc4),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
 
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    "Plan your trip",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                /* 📍 CURRENT LOCATION */
-                OutlinedTextField(
-                    value = currentLocation,
-                    onValueChange = { currentLocation = it },
-                    placeholder = { Text("Enter current location") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = textFieldColors()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                /* 📌 USE CURRENT LOCATION */
-                Row(
-                    modifier = Modifier
-                        .clickable {
-                            currentLocation = "My Current Location"
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.MyLocation,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        "Use current location",
-                        color = Color.White,
-                        fontSize = 14.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                /* 🎯 DESTINATION */
-                OutlinedTextField(
-                    value = destination,
-                    onValueChange = { destination = it },
-                    placeholder = { Text("Enter destination") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = textFieldColors()
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.left),
+                    contentDescription = null,
+                    tint = Color.Black
                 )
             }
         }
 
-        /* 🔽 SPACE BEFORE BUTTON (NOT PUSHED TO BOTTOM) */
-        Spacer(modifier = Modifier.height(40.dp))
-
-        /* ➡️ CONTINUE BUTTON (SHIFTED UP) */
-        Button(
-            onClick = {
-                navController.navigate(
-                    "third?from=${Uri.encode(currentLocation)}&to=${Uri.encode(destination)}"
-                )
-            },
-            enabled = currentLocation.isNotBlank() && destination.isNotBlank(),
+        /* 🔹 BOTTOM CONTENT */
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 20.dp) // ⬆️ lifted from bottom
-                .height(56.dp),
-            shape = RoundedCornerShape(16.dp)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Icon(Icons.Default.ArrowForward, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Continue", fontSize = 18.sp)
+
+            Text(
+                text = "Choose your route",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            /* 📍 CARD FOR LOCATIONS (NEW) */
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFF6F5FF)
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+
+                    OutlinedTextField(
+                        value = currentLocation,
+                        onValueChange = { viewModel.onCurrentLocationChange(it) },
+                        placeholder = { Text("Enter current location") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .clickable { viewModel.useCurrentLocation() }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.MyLocation,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = "Use current location")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = destination,
+                        onValueChange = { viewModel.onDestinationChange(it) },
+                        placeholder = { Text("Enter destination") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            /* ➡️ CONTINUE BUTTON (SAME STYLE AS THIRD SCREEN) */
+            Button(
+                onClick = {
+                    navController.navigate(
+                        "third?from=${Uri.encode(currentLocation)}&to=${Uri.encode(destination)}"
+                    )
+                },
+                enabled = currentLocation.isNotBlank() && destination.isNotBlank(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    ,
+                shape = RoundedCornerShape(30.dp),
+                        colors = ButtonDefaults.buttonColors(
+                        containerColor = Purple40,
+                contentColor = Color.White
+            )
+            ) {
+                Text(
+                    text = "Continue",
+                    fontSize = 18.sp
+                )
+            }
         }
     }
 }
 
-/* 🎨 TEXT FIELD COLORS */
+@Preview(showBackground = true)
 @Composable
-private fun textFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = Color.White,
-    unfocusedBorderColor = Color.White,
-    focusedTextColor = Color.White,
-    unfocusedTextColor = Color.White,
-    cursorColor = Color.White,
-    focusedPlaceholderColor = Color.White.copy(alpha = 0.7f),
-    unfocusedPlaceholderColor = Color.White.copy(alpha = 0.7f)
-)
+fun SecondScreenPreview() {
+    val navController = rememberNavController()
+    SecondScreen(navController = navController)
+}

@@ -1,37 +1,45 @@
 package com.example.myapplication.ui.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.components.PassengerCircle
-import com.example.myapplication.ui.components.RouteIndicator
-import com.example.myapplication.ui.components.SelectChip
+import com.example.myapplication.R
+import com.example.myapplication.ui.components.PassengerSegmentedSelector
+import com.example.myapplication.ui.components.SegmentedDateSelector
+import com.example.myapplication.ui.viewmodel.ThirdScreenViewModel
 import java.net.URLEncoder
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.ui.theme.Purple40
+import java.net.URLDecoder
+
 
 @Composable
 fun ThirdScreen(
     navController: NavController,
+    viewModel: ThirdScreenViewModel = viewModel(),
     from: String,
     to: String
 ) {
+    val decodedFrom = URLDecoder.decode(from, "UTF-8")
+    val decodedTo = URLDecoder.decode(to, "UTF-8")
 
-    var selectedDate by remember { mutableStateOf("Today") }
-    var selectedTime by remember { mutableStateOf("Now") }
-    var selectedPassengers by remember { mutableStateOf(1) }
+
+
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -39,60 +47,34 @@ fun ThirdScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp) // ⬅️ controlled height
+                .height(200.dp) // ⬅️ controlled height
                 .clip(
                     RoundedCornerShape(
                         bottomStart = 40.dp,
                         bottomEnd = 40.dp
                     )
                 )
-                .background(Color(0xFF87CEEB))
-                .padding(16.dp)
+
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.loc4), // your image
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
             Column {
 
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        Icons.Default.ArrowBack,
+                        painter = painterResource(id = R.drawable.left),
                         contentDescription = null,
-                        tint = Color.White
+                        tint = Color.Black
                     )
                 }
 
-                Text(
-                    "Ride Details",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
 
-                Spacer(modifier = Modifier.height(20.dp))
 
-                Row(verticalAlignment = Alignment.Top) {
-//                    RouteIndicator()
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text("From", color = Color.White, fontSize = 14.sp)
-                        Text(
-                            from,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Divider(color = Color.White)
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text("To", color = Color.White, fontSize = 14.sp)
-                        Text(
-                            to,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                }
             }
         }
 
@@ -102,46 +84,89 @@ fun ThirdScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            Text(
+                "Ride Details",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFF6F5FF)
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    com.example.myapplication.ui.components.InfoRow("From", decodedFrom)
+                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    com.example.myapplication.ui.components.InfoRow("To", decodedTo)
+                }
+            }
+
+
+
 
             /* 📅 DATE */
-            Text("Date", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Row {
-                SelectChip("Today", selectedDate) { selectedDate = it }
-                Spacer(Modifier.width(8.dp))
-                SelectChip("Tomorrow", selectedDate) { selectedDate = it }
-                Spacer(Modifier.width(8.dp))
-                SelectChip("Other", selectedDate) { selectedDate = it }
-            }
+            Text(
+                text = "Date",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SegmentedDateSelector(
+                options = listOf("Today", "Tomorrow", "Other"),
+                selectedOption = viewModel.selectedDate,
+                onOptionSelected = { viewModel.onDateSelected(it) }
+            )
+
+
 
             Spacer(modifier = Modifier.height(18.dp))
 
             /* ⏰ TIME */
-            Text("Time", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Row {
-                SelectChip("Morning", selectedTime) { selectedTime = it }
-                Spacer(Modifier.width(8.dp))
-                SelectChip("Afternoon", selectedTime) { selectedTime = it }
-                Spacer(Modifier.width(8.dp))
-                SelectChip("Evening", selectedTime) { selectedTime = it }
-            }
+            Text(
+                text = "Time",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SegmentedDateSelector(
+                options = listOf("Morning", "Afternoon", "Evening"),
+                selectedOption = viewModel.selectedTime,
+                onOptionSelected = { viewModel.onTimeSelected(it) }
+            )
+
+
 
             Spacer(modifier = Modifier.height(18.dp))
 
             /* 👥 PASSENGERS */
-            Text("Passengers", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Passengers",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
-            Row {
-                (1..4).forEach { i ->
-                    PassengerCircle(
-                        text = i.toString(),
-                        selected = selectedPassengers == i
-                    ) {
-                        selectedPassengers = i
-                    }
-                }
-            }
+
+            PassengerSegmentedSelector(
+                selectedPassengers = viewModel.selectedPassengers,
+                onSelected = { viewModel.onPassengersSelected(it) }
+            )
+
+
+
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -150,29 +175,40 @@ fun ThirdScreen(
                 onClick = {
                     val encodedFrom = URLEncoder.encode(from, "UTF-8")
                     val encodedTo = URLEncoder.encode(to, "UTF-8")
-                    val encodedDate = URLEncoder.encode(selectedDate, "UTF-8")
-                    val encodedTime = URLEncoder.encode(selectedTime, "UTF-8")
+                    val encodedDate = URLEncoder.encode(viewModel.selectedDate, "UTF-8")
+                    val encodedTime = URLEncoder.encode(viewModel.selectedTime, "UTF-8")
 
                     navController.navigate(
-                        "fourth/$encodedFrom/$encodedTo/$encodedDate/$encodedTime/$selectedPassengers"
+                        "fourth/$encodedFrom/$encodedTo/$encodedDate/$encodedTime/${viewModel.selectedPassengers}"
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = RoundedCornerShape(30.dp)
+                shape = RoundedCornerShape(30.dp), colors = ButtonDefaults.buttonColors(
+                    containerColor = Purple40,
+                    contentColor = Color.White
+                )
             ) {
-                Text("Continue", fontSize = 18.sp)
+                Text(
+                    text = "Continue",
+                    fontSize = 18.sp
+                )
             }
+
         }
     }
 }
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun ThirdScreenPreview() {
-//    ThirdScreen(
-//        navController = rememberNavController(),
-//        from = "Connaught Place",
-//        to = "India Gate"
-//    )
-//}
+
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun ThirdScreenPreview() {
+    ThirdScreen(
+        navController = rememberNavController(),
+        from = "Meerut",
+        to = "Delhi"
+    )
+}
