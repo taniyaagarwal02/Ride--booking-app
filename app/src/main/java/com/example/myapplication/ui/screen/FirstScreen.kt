@@ -16,10 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,7 +51,7 @@ fun FirstScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        // 🔹 Background Image
+        //  Background Image
         Image(
             painter = painterResource(id = R.drawable.first1),
             contentDescription = null,
@@ -60,7 +62,32 @@ fun FirstScreen(
             contentScale = ContentScale.Crop
         )
 
-        // 🔹 Continue Button (on image)
+        //  HISTORY BUTTON
+        Button(
+            onClick = {
+                navController.navigate("history")
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 24.dp, end = 16.dp)
+                .height(42.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red
+            ),
+            shape = RoundedCornerShape(20.dp),
+            elevation = ButtonDefaults.buttonElevation(6.dp)
+        ) {
+            Text(
+                text = "History",
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+
+
+            )
+        }
+
+        //  Continue Button
         Button(
             onClick = {
                 navController.navigate("second")
@@ -78,11 +105,11 @@ fun FirstScreen(
             Text(
                 text = "Get Started",
                 color = Color.White,
-                fontSize = 22.sp,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
-         
+
 
 
 

@@ -51,8 +51,8 @@ fun MyApplicationTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
+
 }

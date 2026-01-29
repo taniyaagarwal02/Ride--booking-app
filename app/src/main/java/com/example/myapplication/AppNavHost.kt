@@ -26,6 +26,11 @@ fun AppNavHost() {
             )
         }
 
+        // history screen
+        composable("history") {
+            HistoryScreen(navController)
+        }
+
         // -------- SECOND --------
         composable("second") {
             SecondScreen(navController = navController)

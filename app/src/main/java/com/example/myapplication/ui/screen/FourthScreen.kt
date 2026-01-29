@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,9 @@ import com.example.myapplication.ui.components.IconDetailRow
 import com.example.myapplication.ui.components.InfoRow
 import java.net.URLDecoder
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import com.example.myapplication.ui.data.RideDatabase
+import com.example.myapplication.ui.data.RideEntity
 import kotlinx.coroutines.launch
 
 
@@ -44,6 +48,9 @@ fun FourthScreen(
     val decodedTime = URLDecoder.decode(time, "UTF-8")
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val db = RideDatabase.getDatabase(context)
+    val dao = db.rideDao()
 
 
     Scaffold(
@@ -64,7 +71,7 @@ fun FourthScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp) // ⬅️ controlled height
+                    .height(200.dp)
                     .clip(
                         RoundedCornerShape(
                             bottomStart = 40.dp,
@@ -108,13 +115,13 @@ fun FourthScreen(
 
                     Text(
                         text = "Confirm Ride",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+//
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    /* 📍 FROM / TO CARD */
+                    /*  FROM / TO CARD */
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
@@ -142,17 +149,17 @@ fun FourthScreen(
                         Column(modifier = Modifier.padding(16.dp)) {
 
                             IconDetailRow(
-                                iconRes = R.drawable.calendar,   // your date icon
+                                iconRes = R.drawable.calendar,
                                 value = decodedDate
                             )
 
                             IconDetailRow(
-                                iconRes = R.drawable.time,      // your time icon
+                                iconRes = R.drawable.time,
                                 value = decodedTime
                             )
 
                             IconDetailRow(
-                                iconRes = R.drawable.passenger,  // your passenger icon
+                                iconRes = R.drawable.passenger,
                                 value = "$passengers Passengers"
                             )
                         }
@@ -160,11 +167,10 @@ fun FourthScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    /* 🚗 DRIVER DETAILS */
+                    /*  DRIVER DETAILS */
                     Text(
                         text = "Driver Details",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -179,32 +185,43 @@ fun FourthScreen(
                         Column(modifier = Modifier.padding(16.dp)) {
 
                             DriverIconRow(
-                                iconRes = R.drawable.user,   // 👤 driver icon
+                                iconRes = R.drawable.user,
                                 value = "Rahul (Mock)"
                             )
 
                             DriverIconRow(
-                                iconRes = R.drawable.car,      // 🚗 car icon
+                                iconRes = R.drawable.car,
                                 value = "Swift Dzire"
+
                             )
 
                             DriverIconRow(
-                                iconRes = R.drawable.coin,    // 💰 fare icon
-                                value = "₹120"
+                                iconRes = R.drawable.coin,
+                                value = "₹120",
+
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
 
 
-                    /* 🔘 CONFIRM BUTTON */
+                    /*  CONFIRM BUTTON */
                     Button(
                         onClick = {
+//
+
                             scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = "✅ Ride booked successfully!",
-                                    duration = SnackbarDuration.Short
+                                dao.insertRide(
+                                    RideEntity(
+                                        fromLocation = decodedFrom,
+                                        toLocation = decodedTo,
+                                        date = decodedDate,
+                                        time = decodedTime,
+                                        passengers = passengers
+                                    )
                                 )
+                                Log.d("ROOM_TEST", "Ride inserted into DB")
+                                snackbarHostState.showSnackbar("✅ Ride booked successfully!")
                             }
                         },
                         modifier = Modifier
@@ -215,7 +232,7 @@ fun FourthScreen(
                             containerColor = Color(0xFF6A5ACD)
                         )
                     ) {
-                        Text("Confirm Ride", fontSize = 18.sp)
+                        Text("Confirm Ride",  style = MaterialTheme.typography.titleLarge)
                     }
 
                 }
@@ -223,39 +240,7 @@ fun FourthScreen(
         }
     }
 
-    /* 🔹 REUSABLE COMPONENTS */
 
-    @Composable
-    fun InfoRow(label: String, value: String) {
-        Column {
-            Text(text = label, color = Color.Gray, fontSize = 14.sp)
-            Text(text = value, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        }
-    }
-
-    @Composable
-    fun DetailRow(label: String, value: String) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(label, color = Color.Gray)
-            Text(value, fontWeight = FontWeight.Bold)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-    }
-
-    @Composable
-    fun DriverRow(label: String, value: String) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(label, color = Color.Gray)
-            Text(value, fontWeight = FontWeight.Bold)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-    }
 }
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

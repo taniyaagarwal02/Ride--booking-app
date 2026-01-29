@@ -37,7 +37,7 @@ fun SecondScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        /* 🔹 TOP IMAGE SECTION (SAME AS THIRD SCREEN) */
+        /*  TOP IMAGE SECTION */
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,7 +68,7 @@ fun SecondScreen(
             }
         }
 
-        /* 🔹 BOTTOM CONTENT */
+        /*  BOTTOM CONTENT */
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,14 +77,14 @@ fun SecondScreen(
 
             Text(
                 text = "Choose your route",
-                fontSize = 30.sp,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            /* 📍 CARD FOR LOCATIONS (NEW) */
+            /*  CARD FOR LOCATIONS */
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -130,7 +130,7 @@ fun SecondScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            /* ➡️ CONTINUE BUTTON (SAME STYLE AS THIRD SCREEN) */
+            /*  CONTINUE BUTTON */
             Button(
                 onClick = {
                     navController.navigate(
@@ -150,7 +150,7 @@ fun SecondScreen(
             ) {
                 Text(
                     text = "Continue",
-                    fontSize = 18.sp
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
         }

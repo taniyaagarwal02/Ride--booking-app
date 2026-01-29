@@ -43,11 +43,11 @@ fun ThirdScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        /* 🔹 TOP BLUE SECTION (REDUCED HEIGHT) */
+        /*  TOP IMG  SECTION */
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp) // ⬅️ controlled height
+                .height(200.dp)
                 .clip(
                     RoundedCornerShape(
                         bottomStart = 40.dp,
@@ -57,7 +57,7 @@ fun ThirdScreen(
 
         ) {
             Image(
-                painter = painterResource(id = R.drawable.loc4), // your image
+                painter = painterResource(id = R.drawable.loc4),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -78,7 +78,7 @@ fun ThirdScreen(
             }
         }
 
-        /* 🔹 BOTTOM WHITE SECTION */
+        /*  BOTTOM  SECTION */
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,8 +87,7 @@ fun ThirdScreen(
             Text(
                 "Ride Details",
                 fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .padding(start = 10.dp)
 
@@ -100,7 +99,7 @@ fun ThirdScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFF6F5FF)
+                    containerColor = Color(0xFFEDEAF8)
                 )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -113,7 +112,7 @@ fun ThirdScreen(
 
 
 
-            /* 📅 DATE */
+            /*  DATE */
             Text(
                 text = "Date",
                 fontSize = 20.sp,
@@ -132,7 +131,7 @@ fun ThirdScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            /* ⏰ TIME */
+            /*  TIME */
             Text(
                 text = "Time",
                 fontSize = 20.sp,
@@ -151,7 +150,7 @@ fun ThirdScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            /* 👥 PASSENGERS */
+            /*  PASSENGERS */
             Text(
                 text = "Passengers",
                 fontSize = 20.sp,
@@ -170,7 +169,7 @@ fun ThirdScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            /* ➡️ CONTINUE BUTTON */
+            /*  CONTINUE BUTTON */
             Button(
                 onClick = {
                     val encodedFrom = URLEncoder.encode(from, "UTF-8")
@@ -192,7 +191,7 @@ fun ThirdScreen(
             ) {
                 Text(
                     text = "Continue",
-                    fontSize = 18.sp
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
 
