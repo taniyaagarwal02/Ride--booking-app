@@ -65,7 +65,7 @@ fun HistoryScreen(navController: NavController) {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(top = 120.dp)
+                    .padding(top = 20.dp)
             )
         }
 

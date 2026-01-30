@@ -80,7 +80,7 @@ fun FirstScreen(
             Text(
                 text = "History",
                 color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
 
 

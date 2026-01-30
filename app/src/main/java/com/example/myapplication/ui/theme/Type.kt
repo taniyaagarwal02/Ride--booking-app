@@ -10,9 +10,9 @@ import androidx.compose.ui.text.font.Font
 import com.example.myapplication.R
 
 val Poppins = FontFamily(
-    Font(R.layout.poppins_medium, FontWeight.Medium),
-    Font(R.layout.poppins_semibold, FontWeight.SemiBold),
-    Font(R.layout.poppins_regular, FontWeight.Normal),
+    Font(R.font.poppins_regular, FontWeight.Normal),
+    Font(R.font.poppins_medium, FontWeight.Medium),
+    Font(R.font.poppins_semibold, FontWeight.SemiBold),
 )
 
 // Set of Material typography styles to start with
