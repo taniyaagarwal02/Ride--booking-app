@@ -52,8 +52,9 @@ Below are screenshots of the main screens of the app.
 ```md
 | First Screen | Second Screen | Third Screen |
 |-------------|---------------|--------------|
-| ![](screenshots/first_screen.png) | ![](screenshots/second_screen.png) | ![](screenshots/third_screen.png) |
+| ![](screenshots/FirstScreen.png) | ![](screenshots/SecondScreen.png) | ![](screenshots/ThirdScreen.png) |
 
 | Fourth Screen | History Screen |
 |---------------|----------------|
-| ![](screenshots/fourth_screen.png) | ![](screenshots/history_screen.png) |
+| ![](screenshots/FouthScreen.png) | ![](screenshots/HistoryScreen.png) |
+
