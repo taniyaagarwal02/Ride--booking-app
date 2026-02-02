@@ -49,12 +49,12 @@ This project focuses on **modern UI design, smooth navigation flow, and basic An
 
 Below are screenshots of the main screens of the app.
 
-```md
+
 | First Screen | Second Screen | Third Screen |
 |-------------|---------------|--------------|
 | ![](screenshots/FirstScreen.png) | ![](screenshots/SecondScreen.png) | ![](screenshots/ThirdScreen.png) |
 
 | Fourth Screen | History Screen |
 |---------------|----------------|
-| ![](screenshots/FouthScreen.png) | ![](screenshots/HistoryScreen.png) |
+| ![](screenshots/FourthScreen.png) | ![](screenshots/HistoryScreen.png) |
 
